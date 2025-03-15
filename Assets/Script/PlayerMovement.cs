@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     public float moveSpeed;
+    public float sprintSpeed;
 
     public float groundDrag;
 
@@ -14,17 +15,19 @@ public class PlayerMovement : MonoBehaviour
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
-
-    [HideInInspector] public float walkSpeed;
-    [HideInInspector] public float sprintSpeed;
+    bool isSprinting;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode sprintKey = KeyCode.LeftShift;
 
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
+
+    [Header("Animator")]
+    public Animator animator;
 
     public Transform orientation;
 
@@ -45,6 +48,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        isSprinting = Input.GetKey(sprintKey) && grounded;
+        animator.SetBool("isGrounded", grounded);
+        animator.SetBool("isWalking", horizontalInput != 0 || verticalInput != 0 && !isSprinting);
+        animator.SetBool("isRunning", horizontalInput != 0 || verticalInput != 0 && isSprinting);
+        animator.SetBool("isJumping", !grounded );
+
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
@@ -83,6 +92,14 @@ public class PlayerMovement : MonoBehaviour
     {
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+
+        if (isSprinting)
+        {
+            rb.AddForce(moveDirection.normalized * sprintSpeed * 10f, ForceMode.Force);
+        } else
+        {
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        }
 
         // on ground
         if (grounded)
