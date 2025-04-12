@@ -50,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isSprinting = Input.GetKey(sprintKey) && grounded;
         animator.SetBool("isGrounded", grounded);
-        animator.SetBool("isWalking", horizontalInput != 0 || verticalInput != 0 && !isSprinting);
+        animator.SetBool("isWalking", horizontalInput != 0 || verticalInput != 0);
         animator.SetBool("isRunning", horizontalInput != 0 || verticalInput != 0 && isSprinting);
         animator.SetBool("isJumping", !grounded );
 
