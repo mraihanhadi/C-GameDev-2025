@@ -43,14 +43,4 @@ public class ChaseNPC : MonoBehaviour
         }
     }
 
-
-    /*void SetNewPatrolTarget()
-    {
-        Vector3 randomDirection = Random.insideUnitSphere * patrolRadius;
-        randomDirection += transform.position;
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randomDirection, out navHit, patrolRadius, -1);
-        patrolTarget = navHit.position;
-    }*/
-
 }
